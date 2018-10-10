@@ -38,6 +38,14 @@ case class RootTrieNode[K, +V](children: Map[K, PrefixTree[K, V]] =
   def sub(path: Seq[K]): PrefixTree[K, V] = this
 
   def get: V = throw new NoSuchElementException
+
+  override def toString: String = "Root" + getTreeString(2)
+
+  def getTreeString(indent: Int): String = {
+    children.keys.foldLeft("")((acc, key) => {
+      acc + "\n" + (" " * indent) + children(key).getTreeString(indent + 2)
+    })
+  }
 }
 
 case class EmptyTrieNode[K, +V](id: K,
@@ -64,6 +72,14 @@ case class EmptyTrieNode[K, +V](id: K,
   def sub(path: Seq[K]): PrefixTree[K, V] = ???
 
   def get: V = throw new NoSuchElementException
+
+  override def toString: String = getTreeString(0)
+
+  def getTreeString(indent: Int): String = {
+    children.keys.foldLeft(id + "()")((acc, key) => {
+      acc + "\n" + (" " * indent) + children(key).getTreeString(indent + 2)
+    })
+  }
 }
 
 case class TrieNode[K, +V](value: V, id: K,
@@ -91,4 +107,30 @@ case class TrieNode[K, +V](value: V, id: K,
   def sub(path: Seq[K]): PrefixTree[K, V] = ???
 
   def get: V = value
+
+  override def toString: String = getTreeString(0)
+
+  def getTreeString(indent: Int): String = {
+    children.keys.foldLeft(id + "(" + value + ")")((acc, key) => {
+      acc + "\n" + (" " * indent) + children(key).getTreeString(indent + 2)
+    })
+  }
+}
+
+object Main extends App {
+  println(RootTrieNode().put("abc", 1).put("abd", 2))
+
+  val firstNode = RootTrieNode().put("a", 1)
+  println(firstNode)
+  val secondNode = firstNode.put("bc", 3)
+  println(secondNode)
+  println(secondNode.put("bc", 2))
+
+  println(RootTrieNode(Map(
+    'a' -> EmptyTrieNode('a'),
+    'b' -> EmptyTrieNode('b', Map(
+      'c' -> TrieNode(1, 'c'),
+      'd' -> TrieNode(2, 'd')
+    ))
+  )))
 }
