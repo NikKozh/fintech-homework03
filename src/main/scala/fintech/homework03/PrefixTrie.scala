@@ -137,47 +137,5 @@ case class TrieNode[K, +V](value: V, id: K,
 }
 
 object Main extends App {
-  // Простое ветвление:
-  // println(RootTrieNode().put("abc", 1).put("abd", 2))
 
-  /*//Замена значения:
-  val firstNode = RootTrieNode().put("a", 1)
-  println(firstNode)
-  val secondNode = firstNode.put("bc", 3)
-  println(secondNode)
-  println(secondNode.put("bc", 2))
-  */
-
-  /*//Создание дерева через конструкторы:
-  println(RootTrieNode(Map(
-    'a' -> EmptyTrieNode('a'),
-    'b' -> EmptyTrieNode('b', Map(
-      'c' -> TrieNode(1, 'c'),
-      'd' -> TrieNode(2, 'd')
-    ))
-  )))
-  */
-
-  /*//Проверка ковариантности:
-  println(RootTrieNode().put("Max",   5    ).
-                         put("Maxim", 10   ).
-                         put("Maxon", 12.5))
-  */
-
-  /*// Если начинать не с RootTrieNode:
-  println(EmptyTrieNode('a').put("abc", 3))
-  println(TrieNode(5, 'b').put("cde", 6))
-  */
-
-  // Сложное ветвление с разными типами + проверка sub:
-  val complexTrie = RootTrieNode().put("abc",  1    ).
-                                   put("ad",   "two").
-                                   put("abe",  3.5  ).
-                                   put("abcf", true )
-  println(complexTrie)
-  println(complexTrie.sub("abc").get)
-  println(complexTrie.sub("ad").get)
-  println(complexTrie.sub("abe").get)
-  println(complexTrie.sub("abcf").get)
-  // println(complexTrie.sub("abf").get) // проверка на вылет Exception
 }
