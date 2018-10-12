@@ -74,6 +74,11 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
     complexTypeTrie.sub("abcf").get shouldBe true
   }
 
+  "isEmpty method" should "work correctly with different values" in {
+    complexTypeTrie.sub("ab").isEmpty  shouldBe true
+    complexTypeTrie.sub("abc").isEmpty shouldBe false
+  }
+
   behavior of "PrefixTree"
 
   it should "be created correctly through constructors" in {

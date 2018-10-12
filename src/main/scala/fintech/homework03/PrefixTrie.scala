@@ -13,6 +13,7 @@ trait PrefixTree[K, +V] {
 
   def sub(path: Seq[K]): PrefixTree[K, V]
   def get: V
+  def isEmpty: Boolean
 
   def getTreeString(indent: Int): String
 }
@@ -47,6 +48,7 @@ case class Trie[K, +V](id: Option[K], value: Option[V],
   }
 
   def get: V = value.get
+  def isEmpty: Boolean = value.isEmpty
   override def toString: String = getTreeString(2)
 
   def getTreeString(indent: Int): String = {
