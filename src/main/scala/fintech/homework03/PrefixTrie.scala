@@ -31,7 +31,7 @@ trait PrefixTree[K, +V] {
 case class Trie[K, +V](id: Option[K], value: Option[V],
                        children: Map[K, PrefixTree[K, V]] = Map.empty[K, PrefixTree[K, V]]
                        ) extends PrefixTree[K, V] {
-  /** Помещает значение `newValue` по "пути" `path`, начиная с текущего узла.
+  /** Помещает значение `newValue` по "пути" `path`, начиная с дочернего узла.
     *
     * @param path     последовательность идентификаторов типа K, обозначающая путь вставки значения.
     *                 Если передан пустой путь, значение помещается в текущий узел
