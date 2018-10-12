@@ -96,17 +96,6 @@ case class Trie[K, +V](value: Option[V] = None,
   }
 }
 
-/** Вспомогательный объект для быстрого создания пустых деревьев. */
-object Trie {
-  /** Возвращает пустое дерево с указанным идентификатором `id` или корень дерева
-    *
-    * @param id идентификатор пустого дерева. Если не указан, узел считается корневым
-    * @tparam K класс элементов, из которых состоит "путь" Seq[K]
-    * @tparam V класс объектов, хранящихся в узлах дерева
-    */
-  def empty[K, V](id: Option[K] = None) = Trie(id, None)
-}
-
 object Main extends App {
   val complexTrie = Trie().put("abc",  1   ).
                            put("ad",   '2' ).
