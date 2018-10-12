@@ -13,22 +13,19 @@ trait PrefixTree[K, +V] {
   def get: V
   def isExisting: Boolean
 
-  def getTrieString(indent: Int): String
+  def getTrieString(indent: Int, id: Option[K]): String
 }
 
 /** Реализация интерфейса [[fintech.homework03.PrefixTree]]
   *
-  * @param id       идентификатор, характеризующий положение этого узла в дереве. Отсутствие `id`
-  *                 означает, что узел является корнем дерева
-  *
   * @param value    значение текущего узла. Отсутствие `value` означает, что этот узел является промежуточным
   *
-  * @param children Map со всеми детьми этого узла, где ключи - это их `id`, значения - сами дочерние узлы
+  * @param children Map со всеми детьми этого узла, где ключи - это их идентификаторы, значения - сами дочерние узлы
   *
   * @tparam K       класс элементов, из которых состоит "путь" Seq[K]
   * @tparam V       класс объектов, хранящихся в узлах дерева
   */
-case class Trie[K, +V](id: Option[K], value: Option[V],
+case class Trie[K, +V](value: Option[V] = None,
                        children: Map[K, PrefixTree[K, V]] = Map.empty[K, PrefixTree[K, V]]
                        ) extends PrefixTree[K, V] {
   /** Помещает значение `newValue` по "пути" `path`, начиная с дочернего узла.
@@ -50,9 +47,9 @@ case class Trie[K, +V](id: Option[K], value: Option[V],
           copy(children = children.updated(head, childTrie.put(tail, newValue)))
         case None =>
           if (tail.isEmpty)
-            copy(children = children.updated(head, Trie(Some(head), Some(newValue))))
+            copy(children = children.updated(head, Trie(Some(newValue))))
           else
-            copy(children = children.updated(head, Trie.empty(Some(head)).put(tail, newValue)))
+            copy(children = children.updated(head, Trie().put[U](tail, newValue)))
         }
     }
   }
@@ -68,7 +65,7 @@ case class Trie[K, +V](id: Option[K], value: Option[V],
     else if (children.get(path.head).isDefined)
       children(path.head).sub(path.tail)
     else
-      Trie.empty()
+      Trie()
   }
 
   /** Возвращает значение текущего узла дерева.
@@ -80,21 +77,21 @@ case class Trie[K, +V](id: Option[K], value: Option[V],
   /** Возвращает true если значение в текущем узле имеется, в противном случае false */
   def isExisting: Boolean = value.isDefined
 
-  override def toString: String = getTrieString(2)
+  override def toString: String = getTrieString(2, None)
 
   /** Вспомогательный метод для "красивой" отрисовки дерева при вызове toString
     *
     * @param indent отступ слева, с которым нужно отрисовать текущий узел
     * @return       строку, визуализирующую дерево начиная с текущего узла
     */
-  def getTrieString(indent: Int): String = {
+  def getTrieString(indent: Int, id: Option[K]): String = {
     val startString = id match {
       case Some(idValue) => idValue + "(" + value.getOrElse("") + ")"
       case None          => "Root"
     }
 
     children.keys.foldLeft(startString)((acc, key) => {
-      acc + "\n" + (" " * indent) + children(key).getTrieString(indent + 2)
+      acc + "\n" + (" " * indent) + children(key).getTrieString(indent + 2, Some(key))
     })
   }
 }
@@ -111,12 +108,12 @@ object Trie {
 }
 
 object Main extends App {
-  val complexTrie = Trie.empty().put("abc",  1   ).
-                                 put("ad",   '2' ).
-                                 put("abe",  3.0 ).
-                                 put("abcf", true)
+  val complexTrie = Trie().put("abc",  1   ).
+                           put("ad",   '2' ).
+                           put("abe",  3.0 ).
+                           put("abcf", true)
   println(complexTrie)
-  println(complexTrie.sub("abc").get)
+  println(complexTrie.sub("ab"))
   println(complexTrie.sub("ad").get)
   println(complexTrie.sub("abe").get)
   println(complexTrie.sub("abcf").get)
