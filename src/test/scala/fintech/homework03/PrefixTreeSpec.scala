@@ -4,15 +4,15 @@ import org.scalatest.{FlatSpec, Matchers}
 class PrefixTreeSpec extends FlatSpec with Matchers {
   "Root and empty nodes" should "produce NoSuchElementException when get called" in {
     assertThrows[NoSuchElementException] {
-      Trie.empty().get
-      Trie.empty(Some('a')).get
+      Trie().get
+      Trie(Some('a')).get
     }
   }
 
   behavior of "Put, sub and get methods"
 
   it should "work well with strings" in {
-    val tree: PrefixTree[Char, Int] = Trie.empty()
+    val tree: PrefixTree[Char, Int] = Trie()
 
     val with42: PrefixTree[Char, Int] = tree.put("abcd", 42)
     with42.sub("ab").sub("cd").get should be (42)
@@ -22,7 +22,7 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
     withDouble.sub("ab").sub("cde").get should be (13.0)
   }
 
-  val numericTrie: PrefixTree[Int, String] = Trie.empty().put(1 to 5,        "five"    ).
+  val numericTrie: PrefixTree[Int, String] = Trie().put(1 to 5,        "five"    ).
                                                           put(1 to 2,        "two"     ).
                                                           put(List(1, 2, 5), "two-five")
   it should "work well with numbers" in {
@@ -32,18 +32,18 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
   }
 
   it should "work well with basic cases" in {
-    val basicTree: PrefixTree[Char, Int] = Trie.empty().put("a", 5)
+    val basicTree: PrefixTree[Char, Int] = Trie().put("a", 5)
     basicTree.sub("a").get should be (5)
   }
 
   it should "work well with replacing cases" in {
-    val basicTree: PrefixTree[Char, Int] = Trie.empty().put("a", 5).
+    val basicTree: PrefixTree[Char, Int] = Trie().put("a", 5).
                                                         put("a", 6)
     basicTree.sub("a").get should be (6)
   }
 
   it should "work well with simple branching" in {
-    val simpleTrie: PrefixTree[Char, Int] = Trie.empty().put("abc", 1).
+    val simpleTrie: PrefixTree[Char, Int] = Trie().put("abc", 1).
                                                          put("abd", 2)
 
     val simpleSubTree: PrefixTree[Char, Int] = simpleTrie.sub("a")
@@ -53,7 +53,7 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
   }
 
   it should "work well with complex branching" in {
-    val complexTrie: PrefixTree[Char, Int] = Trie.empty().put("abc",  4).
+    val complexTrie: PrefixTree[Char, Int] = Trie().put("abc",  4).
                                                           put("ad",   3).
                                                           put("abe",  2).
                                                           put("abcf", 1)
@@ -63,7 +63,7 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
     complexTrie.sub("abcf").get should be (1)
   }
 
-  val complexTypeTrie: PrefixTree[Char, AnyVal] = Trie.empty().put("abc",  1   ).
+  val complexTypeTrie: PrefixTree[Char, AnyVal] = Trie().put("abc",  1   ).
                                                                put("ad",   '2' ).
                                                                put("abe",  3.0 ).
                                                                put("abcf", true)
@@ -82,11 +82,11 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
   behavior of "PrefixTree"
 
   it should "be created correctly through constructors" in {
-    val tree: PrefixTree[Char, Char] = Trie(None, None, Map(
-      'a' -> Trie.empty(Some('a')),
-      'b' -> Trie(Some('b'), None, Map(
-        'c' -> Trie(Some('c'), Some(1)),
-        'd' -> Trie(Some('d'), Some(2))
+    val tree: PrefixTree[Char, Char] = Trie(None, Map(
+      'a' -> Trie(Some('a')),
+      'b' -> Trie(None, Map(
+        'c' -> Trie(Some(1)),
+        'd' -> Trie(Some(2))
       ))
     ))
 
@@ -96,17 +96,14 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
 
   it should "be printed correctly with only root node" in {
     val testData = "Root"
-    Trie.empty().toString should be (testData)
-  }
-
-  it should "be printed correctly with only empty node" in {
-    val testData = "a()"
-    Trie.empty(Some('a')).toString should be (testData)
+    Trie().toString should be (testData)
   }
 
   it should "be printed correctly with only node with value" in {
-    val testData = "a(1)"
-    Trie(Some('a'), Some(1)).toString should be (testData)
+    val testData =
+      """|Root
+         |  a(1)""".stripMargin
+    Trie().put("a", 1).toString should be (testData)
   }
 
   it should "be printed correctly with complex branching" in {
