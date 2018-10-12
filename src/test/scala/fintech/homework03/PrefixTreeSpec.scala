@@ -23,8 +23,8 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
   }
 
   val numericTrie: PrefixTree[Int, String] = Trie().put(1 to 5,        "five"    ).
-                                                          put(1 to 2,        "two"     ).
-                                                          put(List(1, 2, 5), "two-five")
+                                                    put(1 to 2,        "two"     ).
+                                                    put(List(1, 2, 5), "two-five")
   it should "work well with numbers" in {
     numericTrie.sub(1 to 3).sub(4 to 5).get   should be ("five")
     numericTrie.sub(List(1)).sub(List(2)).get should be ("two")
@@ -44,7 +44,7 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
 
   it should "work well with simple branching" in {
     val simpleTrie: PrefixTree[Char, Int] = Trie().put("abc", 1).
-                                                         put("abd", 2)
+                                                   put("abd", 2)
 
     val simpleSubTree: PrefixTree[Char, Int] = simpleTrie.sub("a")
 
@@ -54,9 +54,9 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
 
   it should "work well with complex branching" in {
     val complexTrie: PrefixTree[Char, Int] = Trie().put("abc",  4).
-                                                          put("ad",   3).
-                                                          put("abe",  2).
-                                                          put("abcf", 1)
+                                                    put("ad",   3).
+                                                    put("abe",  2).
+                                                    put("abcf", 1)
     complexTrie.sub("abc" ).get should be (4)
     complexTrie.sub("ad"  ).get should be (3)
     complexTrie.sub("abe" ).get should be (2)
@@ -64,9 +64,9 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
   }
 
   val complexTypeTrie: PrefixTree[Char, AnyVal] = Trie().put("abc",  1   ).
-                                                               put("ad",   '2' ).
-                                                               put("abe",  3.0 ).
-                                                               put("abcf", true)
+                                                         put("ad",   '2' ).
+                                                         put("abe",  3.0 ).
+                                                         put("abcf", true)
   it should "work well with complex branching and different types" in {
     complexTypeTrie.sub("abc" ).get should be (1)
     complexTypeTrie.sub("ad"  ).get should be ('2')
