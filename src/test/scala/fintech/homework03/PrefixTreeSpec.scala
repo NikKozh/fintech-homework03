@@ -22,13 +22,13 @@ class PrefixTreeSpec extends FlatSpec with Matchers {
     withDouble.sub("ab").sub("cde").get should be (13.0)
   }
 
-  val numericTrie: PrefixTree[Int, String] = Trie.empty().put(1 to 5, "five"    ).
-                                                          put(1 to 2, "two"     ).
+  val numericTrie: PrefixTree[Int, String] = Trie.empty().put(1 to 5,        "five"    ).
+                                                          put(1 to 2,        "two"     ).
                                                           put(List(1, 2, 5), "two-five")
   it should "work well with numbers" in {
-    numericTrie.sub(1 to 3).sub(4 to 5).get should be ("five")
-    numericTrie.sub(List(1)).sub(List(2)).get             should be ("two")
-    numericTrie.sub(List(1, 2, 5)).get                    should be ("two-five")
+    numericTrie.sub(1 to 3).sub(4 to 5).get   should be ("five")
+    numericTrie.sub(List(1)).sub(List(2)).get should be ("two")
+    numericTrie.sub(List(1, 2, 5)).get        should be ("two-five")
   }
 
   it should "work well with basic cases" in {
