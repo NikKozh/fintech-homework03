@@ -43,11 +43,9 @@ case class Trie[K, +V](id: Option[K], value: Option[V],
     * @return         новое дерево с учётом вставки нового значения
     */
   def put[U >: V](path: Seq[K], newValue: U): PrefixTree[K, U] = {
-    // Явно конвертируем path в List, чтобы у нас был метод cons для удобного паттерна head :: tail
-    // Иначе мы не можем работать с Range, WrappedString и т.п.
-    path.toList match {
-      case Nil          => copy(value = Some(newValue))
-      case head :: tail => children.get(head) match {
+    path match {
+      case Seq()              => copy(value = Some(newValue))
+      case Seq(head, tail@_*) => children.get(head) match {
         case Some(childTrie) =>
           copy(children = children.updated(head, childTrie.put(tail, newValue)))
         case None =>
